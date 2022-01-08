@@ -1,0 +1,21 @@
+{
+  ///////////////////
+  // Editor config //
+  ///////////////////
+  //
+  ///////////////////////
+  // Extensions config //
+  ///////////////////////
+  // johnsoncodehk.volar
+  //
+  // For specific files
+  "[javascript]": {
+    "editor.defaultFormatter": "johnsoncodehk.volar"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "johnsoncodehk.volar"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "johnsoncodehk.volar"
+  },
+}
