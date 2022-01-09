@@ -1,8 +1,7 @@
-<script setup lang="ts">
-import Chat from '@/components/Chat.vue'
-</script>
-
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" height="80" />
-  <Chat />
+  <p>
+    <router-link to="/">Go to home</router-link>
+    <router-link to="/lobby">Go to lobby</router-link>
+  </p>
+  <router-view></router-view>
 </template>

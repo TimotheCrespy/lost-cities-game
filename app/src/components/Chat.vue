@@ -22,11 +22,13 @@ socket.on('chat message', function (message) {
 </script>
 
 <template>
-  <h1>Chat</h1>
+  <section>
+    <h2>Chat</h2>
 
-  <input @keypress.enter="sendMessage" v-model="message" />
+    <input @keypress.enter="sendMessage" v-model="message" />
 
-  <ul>
-    <li v-for="message in messages">{{ message }}</li>
-  </ul>
+    <ul>
+      <li v-for="message in messages">{{ message }}</li>
+    </ul>
+  </section>
 </template>
