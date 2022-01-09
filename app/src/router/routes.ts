@@ -4,7 +4,7 @@ import Lobby from '@/views/Lobby.vue'
 
 const routes: RouterOptions["routes"] = [
   { path: '/', name: 'home', component: Home },
-  { path: '/lobby', name: 'lobby', component: Lobby },
+  { path: '/lobby/:gameCode', name: 'lobby', component: Lobby },
 ]
 
 export default routes

@@ -1,24 +1,21 @@
-const app = require('express')();
-const cors = require('cors')
-console.log(__dirname + '/../.env');
+import express from 'express'
+const app = express()
+import cors from 'cors'
 app.use(cors())
-const http = require('http').Server(app);
-require('dotenv').config({ path: '../.env' })
-console.log(process.env);
+import http from 'http'
+const server = http.Server(app)
+import dotenv from 'dotenv'
+const DOTENV_PATH = '../.env'
+dotenv.config({ path: DOTENV_PATH })
 
-const io = require('socket.io')(http, {
-  cors: {
-    origin: process.env.NODE_ENV === "production" ? 'lost-cities-game.io' : process.env.APP_URL,
-  }
-});
+import setGameRoutes from './routes/game.js'
+setGameRoutes(app)
+
+import setSocket from './socket.js'
+setSocket(server)
+
 const port = process.env.PORT || 3000;
 
-io.on('connection', (socket) => {
-  socket.on('chat message', msg => {
-    io.emit('chat message', msg);
-  });
-});
-
-http.listen(port, () => {
+server.listen(port, () => {
   console.log(`Socket.IO server running at http://localhost:${port}/`);
 });

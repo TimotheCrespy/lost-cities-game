@@ -1,15 +1,10 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useRoute } from "vue-router";
 import { io } from "socket.io-client";
-import { ref, onMounted } from 'vue'
 
-const gameCode = ref<null | string>(null)
-
-const socket = io(import.meta.env.VITE_API_URL);
-
-onMounted(() => {
-  console.log('generateGameCode()')
-})
-
+const route = useRoute()
+const gameCode = ref(route.params.gameCode as string)
 </script>
 
 <template>

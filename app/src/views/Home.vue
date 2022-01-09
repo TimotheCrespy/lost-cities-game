@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { io } from "socket.io-client";
 import Chat from '@/components/Chat.vue'
 import { useRouter } from "vue-router"
+import useGameService from "@/composables/useGameService"
 
 const router = useRouter()
 
-const createGame = () => {
-  router.push({ name: 'lobby' })
+const createGame = async () => {
+  const game = await useGameService.createGame()
+  router.push({ name: 'lobby', params: { gameCode: game.code } })
 }
 
 </script>
