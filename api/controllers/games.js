@@ -1,4 +1,6 @@
 import Game from "../entities/Game.js";
+import Player from "../entities/Player.js";
+import { generateUniqueCode } from '../utils.js'
 
 const games = new Map();
 
@@ -11,8 +13,10 @@ const getGameFromCode = (gameCode) => {
 }
 
 const createGame = (req, res) => {
-  const game = new Game()
-  game.generateCode(getGameCodes(games))
+  const creatorUsername = new Player(req.body.creatorUsername)
+  const game = new Game(creatorUsername)
+  const code = generateUniqueCode(getGameCodes(games))
+  game.setCode(code)
 
   games.set(game.code, game)
 
@@ -20,8 +24,10 @@ const createGame = (req, res) => {
 }
 
 const joinGame = (req, res) => {
+  const opponentUsername = new Player(req.body.opponentUsername)
   const gameCode = req.body.gameCode
   const game = getGameFromCode(gameCode)
+  game.setOpponent(opponentUsername)
 
   res.send(JSON.stringify(game))
 }

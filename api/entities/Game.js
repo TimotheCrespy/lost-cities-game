@@ -1,11 +1,18 @@
-import { generateUniqueCode } from '../utils.js'
-
 export default class Game {
   code
+  creator
+  opponent
 
-  constructor() { }
-
-  generateCode(existingGameCodes) {
-    this.code = generateUniqueCode(existingGameCodes)
+  constructor(player) {
+    this.creator = player
+  }
+  setCode(code) {
+    this.code = code
+  }
+  setOpponent(player) {
+    if (this.creator.username == player.username) {
+      player.setUsername(`${player.username}-bis`)
+    }
+    this.opponent = player
   }
 }

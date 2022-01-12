@@ -6,8 +6,15 @@ import { ref } from "vue"
 
 const router = useRouter()
 
+const username = ref("The expeditor")
+const createGameError = ref<null | string>(null)
+
 const createGame = async () => {
-  const game = await useGameService.createGame()
+  if (!username.value) {
+    createGameError.value = "Please provide a username"
+    return
+  }
+  const game = await useGameService.createGame(username.value)
   router.push({ name: 'lobby', params: { gameCode: game.code } })
 }
 
@@ -23,7 +30,7 @@ const joinGame = async () => {
     joinGameError.value = "Please provide a 6-letter game code"
     return
   }
-  const game = await useGameService.joinGame(gameCode.value)
+  const game = await useGameService.joinGame(gameCode.value, username.value)
   if (!game) {
     joinGameError.value = "Game does not exist"
     return
@@ -37,11 +44,16 @@ const joinGame = async () => {
   <h1>Home</h1>
 
   <section>
+    <input type="text" v-model="username" placeholder="Username" />
+    <div v-if="createGameError">{{ createGameError }}</div>
+  </section>
+
+  <section>
     <button @click="createGame">Create game</button>
   </section>
 
   <section>
-    <input type="text" v-model="gameCode" />
+    <input type="text" v-model="gameCode" placeholder="Game code" />
     <button @click="joinGame">Join game</button>
     <div v-if="joinGameError">{{ joinGameError }}</div>
   </section>
