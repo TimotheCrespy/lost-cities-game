@@ -8,6 +8,10 @@ import dotenv from 'dotenv'
 const DOTENV_PATH = '../.env'
 dotenv.config({ path: DOTENV_PATH })
 
+// Allow usage of "body" in POST and PUT requests
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 import setGameRoutes from './routes/game.js'
 setGameRoutes(app)
 

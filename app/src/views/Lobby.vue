@@ -12,7 +12,7 @@ const gameCode = ref(route.params.gameCode as string)
 
   <section>
     <p v-if="gameCode">
-      Your game code is
+      The game code is
       <code>{{ gameCode }}</code>
     </p>
   </section>
