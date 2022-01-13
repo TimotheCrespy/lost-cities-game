@@ -3,7 +3,7 @@ const app = express()
 import cors from 'cors'
 app.use(cors())
 import http from 'http'
-const server = http.Server(app)
+const server = new http.Server(app)
 import dotenv from 'dotenv'
 const DOTENV_PATH = '../.env'
 dotenv.config({ path: DOTENV_PATH })

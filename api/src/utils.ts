@@ -1,4 +1,4 @@
-const generateUniqueCode = (existingGameCodes) => {
+const generateUniqueCode = (existingGameCodes: string[]): string => {
   let code = ""
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
   const codeLength = 6

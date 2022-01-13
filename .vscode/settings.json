@@ -2,7 +2,8 @@
   ///////////////////
   // Editor config //
   ///////////////////
-  //
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
   ///////////////////////
   // Extensions config //
   ///////////////////////
