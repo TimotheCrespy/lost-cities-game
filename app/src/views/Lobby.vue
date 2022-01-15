@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from "vue-router";
-import { io } from "socket.io-client";
+import Chat from '@/components/Chat.vue'
 
 const route = useRoute()
 const gameCode = ref(route.params.gameCode as string)
@@ -16,4 +16,6 @@ const gameCode = ref(route.params.gameCode as string)
       <code>{{ gameCode }}</code>
     </p>
   </section>
+
+  <Chat :game-code="gameCode" />
 </template>

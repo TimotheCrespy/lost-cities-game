@@ -1,20 +1,23 @@
 <script setup lang="ts">
-import { io } from "socket.io-client";
 import { ref } from 'vue'
+import socket from '../composables/socket'
+import EVENT_TYPES from "../enums/eventTypes"
+
+const props = defineProps<{
+  gameCode: string
+}>()
 
 const message = ref<null | string>(null)
 const messages = ref<string[]>([])
 
-const socket = io(import.meta.env.VITE_WS_URL);
+socket.on(EVENT_TYPES.CHAT.MESSAGE, (data) => {
+  messages.value.push(data.message)
+})
 
 const sendMessage = () => {
-  socket.emit('send chat message', message.value)
+  socket.emit(EVENT_TYPES.CHAT.MESSAGE, { gameCode: props.gameCode, message: message.value })
   message.value = null
 }
-
-socket.on('chat message', function (message) {
-  messages.value.push(message)
-});
 </script>
 
 <template>

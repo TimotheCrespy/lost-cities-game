@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import Chat from '@/components/Chat.vue'
 import { useRouter } from "vue-router"
 import { ref } from "vue"
-import { io } from "socket.io-client";
+import socket from '../composables/socket'
+import EVENT_TYPES from "../enums/eventTypes"
 
-const socket = io(import.meta.env.VITE_WS_URL);
 const router = useRouter()
 
 const username = ref("The expeditor")
@@ -16,13 +15,14 @@ const createGame = async () => {
     return
   }
 
-  socket.emit("game:create", { creatorUsername: username.value })
-}
+  socket.connect();
 
-socket.on("game:created", (game) => {
-  console.log(game)
-  router.push({ name: 'lobby', params: { gameCode: game.code } })
-});
+  socket.on(EVENT_TYPES.GAME.CREATED, (game) => {
+    router.push({ name: 'lobby', params: { gameCode: game.code } })
+  });
+
+  socket.emit(EVENT_TYPES.GAME.CREATE, { creatorUsername: username.value })
+}
 
 const gameCode = ref<null | string>(null)
 const joinGameError = ref<null | string>(null)
@@ -37,16 +37,19 @@ const joinGame = async () => {
     return
   }
 
-  socket.emit("game:join", { gameCode: gameCode.value, creatorUsername: username.value })
+  socket.connect();
+
+  socket.on(EVENT_TYPES.GAME.JOIN_ERROR, () => {
+    joinGameError.value = "Unable to join game"
+  });
+
+  socket.on(EVENT_TYPES.GAME.JOINED, (game) => {
+    router.push({ name: 'lobby', params: { gameCode: game.code } })
+  });
+
+  socket.emit(EVENT_TYPES.GAME.JOIN, { gameCode: gameCode.value, creatorUsername: username.value })
 }
 
-socket.on("game:join:error", (game) => {
-  joinGameError.value = "Unable to join game"
-});
-
-socket.on("game:joined", (game) => {
-  router.push({ name: 'lobby', params: { gameCode: game.code } })
-});
 </script>
 
 <template>
@@ -66,6 +69,4 @@ socket.on("game:joined", (game) => {
     <button @click="joinGame">Join game</button>
     <div v-if="joinGameError">{{ joinGameError }}</div>
   </section>
-
-  <Chat />
 </template>
