@@ -15,7 +15,8 @@ const initIo = (httpServer: HttpServer): void => {
 
   io.on('connection', (socket) => {
     socket.on(EVENT_TYPES.GAME.CREATE, (data) => gamesController.createGame(data, socket))
-    socket.on(EVENT_TYPES.GAME.JOIN, (data) => gamesController.joinGame(data, socket))
+    socket.on(EVENT_TYPES.GAME.JOIN, (data) => gamesController.joinGame(data, socket, io))
+    socket.on(EVENT_TYPES.GAME.START, (data) => gamesController.startGame(data, socket, io))
 
     socket.on(EVENT_TYPES.CHAT.MESSAGE, (data) => chatController.sendMessage(data, socket, io))
   });

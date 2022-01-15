@@ -24,16 +24,16 @@ const createGame = (data: { creatorUsername: string; }, socket: Socket): void =>
   // Chat
   socket.join(code)
 
-  socket.emit(EVENT_TYPES.GAME.CREATED, game)
+  socket.emit(EVENT_TYPES.GAME.CREATED, { game })
 }
 
-const joinGame = (data: { gameCode: string, creatorUsername: string; }, socket: Socket): void => {
+const joinGame = (data: { gameCode: string, creatorUsername: string; }, socket: Socket, io: Server): void => {
   const opponentUsername = new Player(data.creatorUsername)
   const gameCode = data.gameCode
   const game = getGameFromCode(gameCode)
 
   if (!game) {
-    socket.emit(EVENT_TYPES.GAME.JOIN_ERROR, game)
+    socket.emit(EVENT_TYPES.GAME.JOIN_ERROR, { game })
     return
   }
 
@@ -42,7 +42,21 @@ const joinGame = (data: { gameCode: string, creatorUsername: string; }, socket: 
   // Chat
   socket.join(gameCode)
 
-  socket.emit(EVENT_TYPES.GAME.JOINED, game)
+  io.emit(EVENT_TYPES.GAME.JOINED, { game })
 }
 
-export default { createGame, joinGame }
+const startGame = (data: { gameCode: string }, socket: Socket, io: Server): void => {
+  const gameCode = data.gameCode
+  const game = getGameFromCode(gameCode)
+
+  if (!game) {
+    socket.emit(EVENT_TYPES.GAME.START_ERROR, { game })
+    return
+  }
+
+  game.start()
+
+  io.emit(EVENT_TYPES.GAME.STARTED, { gameCode: game.code })
+}
+
+export default { createGame, joinGame, startGame }

@@ -6,6 +6,9 @@ export default {
     JOIN: "game:join",
     JOIN_ERROR: "game:join:error",
     JOINED: "game:joined",
+    START: "game:start",
+    START_ERROR: "game:start:error",
+    STARTED: "game:started",
   },
   CHAT: {
     MESSAGE: "chat:message",

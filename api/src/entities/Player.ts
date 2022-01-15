@@ -5,6 +5,6 @@ export default class Player {
     this.username = username
   }
   setUsername(username: string) {
-    this.username = username
+    this.username = username.charAt(0).toUpperCase() + username.slice(1);
   }
 }

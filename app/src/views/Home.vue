@@ -3,13 +3,15 @@ import { useRouter } from "vue-router"
 import { ref } from "vue"
 import socket from '../composables/socket'
 import EVENT_TYPES from "../enums/eventTypes"
+import { useGameStore } from '@/store/game'
 
 const router = useRouter()
+const gameStore = useGameStore()
 
 const username = ref("The expeditor")
 const createGameError = ref<null | string>(null)
 
-const createGame = async () => {
+const createGame = () => {
   if (!username.value) {
     createGameError.value = "Please provide a username"
     return
@@ -17,8 +19,9 @@ const createGame = async () => {
 
   socket.connect();
 
-  socket.on(EVENT_TYPES.GAME.CREATED, (game) => {
-    router.push({ name: 'lobby', params: { gameCode: game.code } })
+  socket.on(EVENT_TYPES.GAME.CREATED, (data: { game: Game }) => {
+    gameStore.initGame(data.game.code, data.game.creator, true)
+    router.push({ name: 'game-lobby', params: { gameCode: data.game.code } })
   });
 
   socket.emit(EVENT_TYPES.GAME.CREATE, { creatorUsername: username.value })
@@ -27,7 +30,7 @@ const createGame = async () => {
 const gameCode = ref<null | string>(null)
 const joinGameError = ref<null | string>(null)
 
-const joinGame = async () => {
+const joinGame = () => {
   if (!username.value) {
     joinGameError.value = "Please provide a username"
     return
@@ -43,13 +46,14 @@ const joinGame = async () => {
     joinGameError.value = "Unable to join game"
   });
 
-  socket.on(EVENT_TYPES.GAME.JOINED, (game) => {
-    router.push({ name: 'lobby', params: { gameCode: game.code } })
+  socket.on(EVENT_TYPES.GAME.JOINED, (data: { game: Game }) => {
+    gameStore.initGame(data.game.code, data.game.creator)
+    gameStore.setOpponent(data.game.opponent as Player)
+    router.push({ name: 'game-lobby', params: { gameCode: data.game.code } })
   });
 
   socket.emit(EVENT_TYPES.GAME.JOIN, { gameCode: gameCode.value, creatorUsername: username.value })
 }
-
 </script>
 
 <template>

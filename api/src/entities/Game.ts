@@ -15,4 +15,7 @@ export default class Game {
     }
     this.opponent = player
   }
+  start() {
+
+  }
 }
