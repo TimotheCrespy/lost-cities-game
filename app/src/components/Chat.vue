@@ -2,17 +2,13 @@
 import { io } from "socket.io-client";
 import { ref } from 'vue'
 
-// defineProps<{
-//   msg: string
-// }>()
-
 const message = ref<null | string>(null)
 const messages = ref<string[]>([])
 
-const socket = io(import.meta.env.VITE_API_URL);
+const socket = io(import.meta.env.VITE_WS_URL);
 
 const sendMessage = () => {
-  socket.emit('chat message', message.value)
+  socket.emit('send chat message', message.value)
   message.value = null
 }
 

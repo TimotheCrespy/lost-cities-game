@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import Chat from '@/components/Chat.vue'
 import { useRouter } from "vue-router"
-import useGameService from "@/composables/useGameService"
 import { ref } from "vue"
+import { io } from "socket.io-client";
 
+const socket = io(import.meta.env.VITE_WS_URL);
 const router = useRouter()
 
 const username = ref("The expeditor")
@@ -14,30 +15,38 @@ const createGame = async () => {
     createGameError.value = "Please provide a username"
     return
   }
-  const game = await useGameService.createGame(username.value)
-  router.push({ name: 'lobby', params: { gameCode: game.code } })
+
+  socket.emit("game:create", { creatorUsername: username.value })
 }
+
+socket.on("game:created", (game) => {
+  console.log(game)
+  router.push({ name: 'lobby', params: { gameCode: game.code } })
+});
 
 const gameCode = ref<null | string>(null)
 const joinGameError = ref<null | string>(null)
 
 const joinGame = async () => {
-  if (!gameCode.value) {
-    joinGameError.value = "Please provide a game code"
+  if (!username.value) {
+    joinGameError.value = "Please provide a username"
     return
   }
-  if (gameCode.value.length !== 6) {
+  if (!gameCode.value || gameCode.value.length !== 6) {
     joinGameError.value = "Please provide a 6-letter game code"
     return
   }
-  const game = await useGameService.joinGame(gameCode.value, username.value)
-  if (!game) {
-    joinGameError.value = "Game does not exist"
-    return
-  }
-  router.push({ name: 'lobby', params: { gameCode: game.code } })
 
+  socket.emit("game:join", { gameCode: gameCode.value, creatorUsername: username.value })
 }
+
+socket.on("game:join:error", (game) => {
+  joinGameError.value = "Unable to join game"
+});
+
+socket.on("game:joined", (game) => {
+  router.push({ name: 'lobby', params: { gameCode: game.code } })
+});
 </script>
 
 <template>

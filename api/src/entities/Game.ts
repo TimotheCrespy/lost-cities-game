@@ -11,7 +11,7 @@ export default class Game {
   }
   setOpponent(player: Player) {
     if (this.creator.username == player.username) {
-      player.setUsername(`${player.username}-bis`)
+      player.setUsername(`${player.username} bis`)
     }
     this.opponent = player
   }

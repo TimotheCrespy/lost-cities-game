@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Socket } from 'socket.io';
 import Game from "../entities/Game.js";
 import Player from "../entities/Player.js";
 import { generateUniqueCode } from '../utils.js'
@@ -13,29 +13,27 @@ const getGameFromCode = (gameCode: string): Game | undefined => {
   return games.get(gameCode)
 }
 
-const createGame = (req: Request, res: Response) => {
-  const creatorUsername = new Player(req.body.creatorUsername)
+const createGame = (data: { creatorUsername: string; }, socket: Socket): void => {
+  const creatorUsername = new Player(data.creatorUsername)
   const code = generateUniqueCode(getGameCodes(games))
   const game = new Game(code, creatorUsername)
 
   games.set(game.code, game)
 
-  res.send(JSON.stringify(game))
+  socket.emit("game:created", game)
 }
-
-const joinGame = (req: Request, res: Response) => {
-  const opponentUsername = new Player(req.body.opponentUsername)
-  const gameCode = req.body.gameCode
-  const game = getGameFromCode(gameCode)
+const joinGame = (data: { gameCode: string, creatorUsername: string; }, socket: Socket): void => {
+  const opponentUsername = new Player(data.creatorUsername)
+  const game = getGameFromCode(data.gameCode)
 
   if (!game) {
-    res.sendStatus(404);
+    socket.emit("game:join:error", game)
     return
   }
 
   game.setOpponent(opponentUsername)
 
-  res.send(JSON.stringify(game))
+  socket.emit("game:joined", game)
 }
 
 export default { createGame, joinGame }

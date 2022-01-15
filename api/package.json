@@ -1,5 +1,5 @@
 {
-  "name": "lost-cities-game-api",
+  "name": "lost-cities-game-ws",
   "version": "0.0.1",
   "description": "my first socket.io app",
   "type": "module",

@@ -9,10 +9,7 @@ declare module '*.vue' {
 
 // https://vitejs.dev/guide/env-and-mode.html#intellisense-for-typescript
 interface ImportMetaEnv {
-  readonly VITE_API_URL: string
-  readonly VITE_API_PATH: string
-  readonly VITE_IS_MOCKING_API: string
-  readonly VITE_MOCKING_DELAY_MS: number
+  readonly VITE_WS_URL: string
 }
 
 interface ImportMeta {
